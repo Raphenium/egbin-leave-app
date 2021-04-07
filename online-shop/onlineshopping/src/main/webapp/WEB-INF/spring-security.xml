@@ -1,0 +1,58 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="net.kzn"/>
+
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+	<http pattern="/resources/**" security="none"/>
+
+	<http>
+		<!-- only admin access -->
+		<!-- <intercept-url pattern="/manage/**" access="hasAuthority('ADMIN')" /> -->
+		<!-- only user access (who is registered) -->
+		<!-- <intercept-url pattern="/cart/**" access="hasAuthority('USER')" /> -->
+		<!-- rest of the world -->		
+		<intercept-url pattern="//**" access="hasAuthority('USER') or hasAuthority('ADMIN')" />	
+		<intercept-url pattern="/approval/**" access="hasAuthority('ADMIN')" />	
+		<intercept-url pattern="/product/**" access="hasAuthority('ADMIN')" />
+		<intercept-url pattern="/**" access="permitAll" />
+		<!-- <intercept-url pattern="/onlineshopping/charts/mdaStaffData" access="permitAll" /> -->
+		
+		<form-login login-page="/login" />
+		<!-- <csrf disabled="true"/> -->
+		<!-- <access-denied-handler error-page="/access-denied"/> -->
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider>
+ 			<password-encoder ref="passwordEncoder" />
+ 			<jdbc-user-service data-source-ref="dataSource"
+ 				authorities-by-username-query="select email, role from user_detail where email = ?"
+ 				users-by-username-query="select email, password, enabled from user_detail where email = ?"
+ 			/>
+ 		</authentication-provider>
+	</authentication-manager>
+	
+	<!-- <mvc:cors>
+	<mvc:mapping path="/**"
+	allowed-origins="*"
+	allowed-headers="Content-Type, content-type, x-requested-with, Access-Control-Allow-Origin, Access-Control-Allow-Headers, x-auth-token, x-app-id, Origin,Accept, X-Requested-With, Access-Control-Request-Method, Access-Control-Request-Headers"
+	allowed-methods="POST, GET, DELETE, PUT"
+	exposed-headers="x-auth-token, Access-Control-Allow-Origin"/>
+	</mvc:cors>
+	
+	<mvc:view-controller path="/net/kzn/onlineshopping/controller"/> -->
+
+</beans:beans>
