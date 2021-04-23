@@ -29,7 +29,7 @@ public class HibernateConfig {
 	private final static String DATABASE_DRIVER = "com.mysql.cj.jdbc.Driver";
 	private final static String DATABASE_DIALECT = "org.hibernate.dialect.MySQL5Dialect";
 	private final static String DATABASE_USERNAME = "root";
-	private final static String DATABASE_PASSWORD = "raphenium";
+	private final static String DATABASE_PASSWORD = "";
 
 	
 	// dataSource bean will be available
